@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          Receptes
+          Receptes <span class="category-title" v-show="category">{{ category }}</span>
         </q-toolbar-title>
 
         <div>v2</div>
@@ -35,8 +35,17 @@
           v-for="category in categories"
           :key="category.key"
           v-bind="category"
+          :class="{ selected: category.isSelected }"
         />
       </q-list>
+      <q-item class="flex justify-center">
+        <q-btn
+          label="Veure-les totes"
+          color="orange-8"
+          @click="removeFilter"
+          v-show="thereIsAFilter">
+        </q-btn>
+      </q-item>
     </q-drawer>
 
     <q-page-container>
@@ -109,11 +118,9 @@ export default defineComponent({
 
     $store.worker.onmessage = message => {
       const type = message.data.type.toLowerCase()
-      console.log(message.data.data)
       if (type === 'init') {
         $store.recipes = message.data.data.items
         $store.categories = message.data.data.categories
-        console.log($store.recipes)
       }
     }
 
@@ -125,14 +132,58 @@ export default defineComponent({
       return $store.categories
     })
 
+    const removeFilter = () => {
+      $store.removeCategoryFilter()
+    }
+
+    const thereIsAFilter = computed(() => {
+      return $store.selected.category !== ''
+    })
+
+    const category = computed(() => {
+      return $store.selected.category
+    })
+
     return {
       essentialLinks: linksList,
       leftDrawerOpen,
       toggleLeftDrawer () {
         leftDrawerOpen.value = !leftDrawerOpen.value
       },
-      categories
+      categories,
+      removeFilter,
+      thereIsAFilter,
+      category
     }
   }
 })
 </script>
+
+<style scoped lang="scss">
+:deep(.q-item) .q-item__section--avatar {
+  color: $orange-8;
+  transition: all .3s ease-out;
+}
+.q-item {
+  transition: all .3s ease-out;
+}
+.q-item.selected {
+  background: $orange-8;
+  color: white;
+  transition: all .3s ease-in;
+}
+:deep(.q-item.selected) .q-item__section--avatar {
+  color: white;
+  transition: all .3s ease-in;
+}
+:deep(.q-item.selected) .q-item__label--caption {
+  color: #ffd7c1;
+  transition: all .3s ease-in;
+}
+.category-title::before {
+  content: '- '
+}
+:deep(.q-drawer) {
+  background: $seco;
+}
+</style>

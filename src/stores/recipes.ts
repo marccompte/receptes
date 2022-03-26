@@ -7,6 +7,9 @@ export const useRecipeStore = defineStore('recipes', {
     worker: worker,
     recipes: [],
     categories: [],
+    selected: {
+      category: ''
+    },
     dbConfig: {
       DETA_ID: 'b0gdqr47',
       // DETA_KEY: 'b0gdqr47_37u5Vg37r7mFqRKdiopDJ1kS16hxhSvk',
@@ -20,6 +23,15 @@ export const useRecipeStore = defineStore('recipes', {
   actions: {
     increment () {
       this.counter++
+    },
+    removeCategoryFilter () {
+      this.selected.category = ''
+      Object.values(this.categories).forEach((category: any) => {
+        category.isSelected = false
+      })
+      Object.values(this.recipes).forEach((recipe: any) => {
+        recipe.isFiltered = false
+      })
     }
   }
 })

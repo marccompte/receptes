@@ -3,6 +3,8 @@
     clickable
     tag="a"
     target="_blank"
+    :id="name"
+    @click="filterByType"
   >
     <q-item-section
       v-if="name"
@@ -19,7 +21,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
+import { useRecipeStore } from '../stores/recipes'
 
 export default defineComponent({
   name: 'EssentialLink',
@@ -29,21 +32,43 @@ export default defineComponent({
       default: ''
     },
     subs: {
-      type: String,
-      default: ''
+      type: Array,
+      default: () => []
     },
     icon: {
       type: String,
       default: ''
     }
   },
-  setup () {
-    const getIcon = category => {
-      console.log(category)
+  setup (props) {
+    const $store = useRecipeStore()
+    const getIcon = (category: string) => {
       if (category === 'Amanides') return 'fa-solid fa-carrot'
       else return 'fa-solid fa-print'
     }
+    const filterByType = (event: Partial<Event>) => {
+      let target = event.target as HTMLElement
+      while (!target.classList.contains('q-item')) {
+        target = target.parentNode as HTMLElement
+      }
+      $store.selected.category = target.id
+      Object.values($store.categories).forEach((category: any) => {
+        if (category.name === target.id) {
+          category.isSelected = true
+        } else {
+          category.isSelected = false
+        }
+      })
+      Object.values($store.recipes).forEach((recipe: any) => {
+        if (recipe.cat === target.id) {
+          recipe.isFiltered = false
+        } else {
+          recipe.isFiltered = true
+        }
+      })
+    }
     return {
+      filterByType,
       getIcon
     }
   }

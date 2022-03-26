@@ -49,12 +49,14 @@ const init = data => {
       'Vegetarià': 'fa-solid fa-apple-whole'
     }
     json.items.forEach(item => {
+      item.isFiltered = false
       if (!json.categories.find(cat => cat.name === item.cat)) {
         json.categories.push({
           key: json.categories.length,
           name: item.cat,
           subs: [],
-          icon: item.cat in icons ? icons[item.cat] : 'print'
+          icon: item.cat in icons ? icons[item.cat] : 'print',
+          isSelected: false
         })
       }
       if ('sub' in item) {

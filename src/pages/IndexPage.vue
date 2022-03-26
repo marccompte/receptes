@@ -37,6 +37,7 @@
 import { Meta } from '../components/models'
 import { computed, defineComponent, ref } from 'vue'
 import { useRecipeStore } from '../stores/recipes'
+import { Category, Recipe } from '../stores/models'
 
 export default defineComponent({
   name: 'IndexPage',
@@ -49,27 +50,26 @@ export default defineComponent({
     const recipes = computed(() => {
       return $store.recipes
     })
-    const allOptions = $store.recipes.map((recipe: any) => {
-      return recipe.tit
-    })
-    const allRecipes = $store.recipes
-    const hasIngredient = (recipe: any, value: string) => {
-      return recipe.ing.find((ing: any) => {
+    const hasIngredient = (recipe: Recipe, value: string) => {
+      return recipe.ing.find(ing => {
         return ing.find((label: string) => {
           return label && label.toLowerCase().indexOf(value) !== -1
         })
       })
     }
-    const search = (event: any) => {
-      const value = event.target.value.toLowerCase()
-      if (value === '') {
-        $store.recipes.forEach((recipe: any) => {
+    const search = (event: Event) => {
+      const target = event.target as HTMLInputElement
+      const value = target.value.toLowerCase()
+      if (value === 'aaaaaaa') {
+        $store.recipes.forEach((recipe: Recipe) => {
           recipe.isFiltered = false
         })
       } else {
-        $store.recipes.forEach((recipe: any) => {
-          if (recipe.tit.toLowerCase().indexOf(value) !== -1 || recipe.cat.toLowerCase().indexOf(value) !== -1 || (recipe.sub && recipe.sub.toLowerCase().indexOf(value) !== -1) ||
-                hasIngredient(recipe, value)) {
+        $store.recipes.forEach((recipe: Recipe) => {
+          if (value === '' || recipe.tit.toLowerCase().indexOf(value) !== -1 ||
+              recipe.cat.toLowerCase().indexOf(value) !== -1 ||
+              (recipe.sub && recipe.sub.toLowerCase().indexOf(value) !== -1) ||
+              hasIngredient(recipe, value)) {
             recipe.isFiltered = false
           } else {
             recipe.isFiltered = true
@@ -77,8 +77,8 @@ export default defineComponent({
         })
       }
     }
-    const getIcon = (recipe: any) => {
-      const category = $store.categories.find((category: any) => {
+    const getIcon = (recipe: Recipe) => {
+      const category = $store.categories.find((category: Category) => {
         return category.name === recipe.cat
       })
       if (category) {
@@ -104,12 +104,11 @@ h6 {
   margin: 5px;
 }
 .title {
-  max-height: 150px;
   background: $primary;
   color: $seco;
 }
 .text-subtitle2 {
-  color: $orange-8;
+  color: $brown-5;
 }
 .abstract {
   height: 205px;
@@ -119,7 +118,7 @@ h6 {
 .q-page {
   display: flex;
   justify-content: center;
-  /* align-items: center; */
+  align-items: flex-start;
 }
 .q-card {
   display: flex;

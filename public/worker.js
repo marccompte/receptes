@@ -59,6 +59,7 @@ const init = data => {
           isSelected: false
         })
       }
+      item.key = parseInt(item.key)
       if ('sub' in item) {
         const current = json.categories[json.categories.length - 1]
         if (!current.subs.includes(item.sub)) current.subs.push(item.sub)

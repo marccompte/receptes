@@ -22,7 +22,11 @@
     <left-drawer ref="leftDrawer"/>
 
     <q-page-container>
-      <router-view />
+      <router-view v-slot="{ Component }">
+        <transition name="fade">
+          <component :is="Component" />
+        </transition>
+      </router-view>
     </q-page-container>
   </q-layout>
 </template>
@@ -83,7 +87,25 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+  .fade-enter-active,
+  .fade-leave-active {
+    transition-duration: .6s;
+    transition-property: all;
+    transition-timing-function: ease;
+  }
+
+  .fade-enter,
+  .fade-leave-active {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+  .category-title {
+    padding-right: .3em;
+  }
   .category-title::before {
     content: '- '
+  }
+  .category-title:first-child::before {
+    content: none;
   }
 </style>

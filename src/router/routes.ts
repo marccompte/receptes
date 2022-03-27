@@ -7,27 +7,14 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
-        component: () => import('pages/IndexPage.vue'),
-        meta: { transition: 'slide-left' }
+        component: () => import('pages/RecipeList.vue')
       },
       {
         path: 'recipe/:key',
-        component: () => import('pages/RecipePage.vue'),
-        meta: { transition: 'slide-right' }
+        component: () => import('pages/RecipePage.vue')
       }
     ]
   },
-  // {
-  //   path: '/recipe/',
-  //   component: () => import('layouts/RecipeLayout.vue'),
-  //   children: [
-  //     {
-  //       path: ':key',
-  //       component: () => import('pages/RecipePage.vue')
-  //     }
-  //   ]
-  // },
-
   // Always leave this as last one,
   // but you can also remove it
   {

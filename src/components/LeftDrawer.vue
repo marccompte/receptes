@@ -22,7 +22,7 @@
     <q-item class="flex justify-center">
       <q-btn
         label="Veure-les totes"
-        color="orange-8"
+        color="brown-5"
         @click="removeFilter"
         v-show="thereIsAFilter">
       </q-btn>
@@ -81,7 +81,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
   :deep(.q-item) .q-item__section--avatar {
-    color: $orange-8;
+    color: $primary;
     transition: all .3s ease-out;
   }
   .q-item {

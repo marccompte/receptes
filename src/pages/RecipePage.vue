@@ -30,67 +30,70 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
 import { useRecipeStore } from '../stores/recipes'
-// import { Category, Recipe } from '../stores/models'
 
 export default defineComponent({
   name: 'IndexPage',
   setup () {
     const $store = useRecipeStore()
-    const currentRecipe = JSON.parse(JSON.stringify($store.currentRecipe))
-
-    return {
-      currentRecipe
-    }
+    const currentRecipe = computed(() => {
+      if ($store.currentRecipe) {
+        return JSON.parse(JSON.stringify($store.currentRecipe))
+      } else {
+        return ''
+      }
+    })
+    return { currentRecipe }
   }
 })
 </script>
 
 <style scoped lang="scss">
-.q-page {
-  padding: 0 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-}
-.q-toolbar__title {
-  border-bottom: 2px solid $primary;
-  margin: 40px 0px;
-}
-.q-toolbar:first-child .q-toolbar__title {
-  // margin-top: 0px;
-}
-.end {
-  width: 100%;
-}
-.end .h6 {
-  margin-bottom: 100px;
-}
-.q-card {
-  padding: 10px;
-  height: 90px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  width: 200px;
-  background: white;
-  margin: 10px;
-  overflow: hidden;
-  float: left;
-  text-align: center;
-  font-size: 1.3rem;
-}
-.q-card .text-caption {
-  font-size: .8rem;
-}
-.q-item {
-  padding: 20px;
-}
-.text-overline {
-  text-transform: uppercase;
-  font-size: 1.2em;
-  margin-bottom: 10px;
-}
+  .q-page {
+    padding: 0 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  .q-toolbar__title {
+    border-bottom: 2px solid $primary;
+    margin: 40px 0px;
+  }
+  .end {
+    width: 100%;
+  }
+  .end .h6 {
+    margin-bottom: 100px;
+  }
+  .q-card {
+    padding: 10px;
+    height: 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 200px;
+    background: white;
+    margin: 10px;
+    overflow: hidden;
+    float: left;
+    text-align: center;
+    font-size: 1.3rem;
+  }
+  .q-card .text-caption {
+    font-size: .8rem;
+  }
+  .q-list {
+    width: 100%;
+  }
+  .q-item {
+    padding: 20px;
+    min-width: 100%;
+  }
+  .text-overline {
+    text-transform: uppercase;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+  }
 </style>

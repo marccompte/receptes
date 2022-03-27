@@ -60,7 +60,6 @@ export default defineComponent({
       leftDrawer,
       toggleLeftDrawer () {
         leftDrawer.value.toggleLeftDrawer()
-        // $store.leftDrawerOpen = !$store.leftDrawerOpen
       },
       title: computed(() => {
         if ($route.path === '/') {
@@ -70,14 +69,17 @@ export default defineComponent({
             return ['Receptes']
           }
         } else {
-          const currentRecipe = JSON.parse(JSON.stringify($store.currentRecipe))
+          let currentRecipe = false
+          if ($store.currentRecipe) {
+            currentRecipe = JSON.parse(JSON.stringify($store.currentRecipe))
+          }
           if (currentRecipe) {
             return [
               currentRecipe.cat,
               currentRecipe.tit.substring(0, 1).toUpperCase() + currentRecipe.tit.substring(1)
             ]
           } else {
-            return ['Receptes', $store.selected.category]
+            return [$store.selected.category, 'Loading']
           }
         }
       })
@@ -99,11 +101,8 @@ export default defineComponent({
     opacity: 0;
     transform: scale(1.2);
   }
-  .category-title {
-    padding-right: .3em;
-  }
   .category-title::before {
-    content: '- '
+    content: ' - '
   }
   .category-title:first-child::before {
     content: none;

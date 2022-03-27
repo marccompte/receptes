@@ -17,10 +17,16 @@ export default defineComponent({
   name: 'App',
   setup () {
     const $store = useRecipeStore()
+
     const loading = computed(() => $store.recipes.length === 0)
+
     onBeforeMount(() => {
-      $store.worker.postMessage({ type: 'init', data: JSON.parse(JSON.stringify($store.dbConfig)) })
+      $store.worker.postMessage({
+        type: 'init',
+        data: JSON.parse(JSON.stringify($store.dbConfig))
+      })
     })
+
     return {
       loading
     }

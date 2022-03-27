@@ -1,14 +1,15 @@
 <template>
   <q-drawer
     v-model="leftDrawerOpen"
+    :breakpoint="800"
     show-if-above
-    bordered
+    elevated
   >
     <q-list>
       <q-item-label
         header
       >
-        Categories i subcategories
+        Llistat de categories i subcategories
       </q-item-label>
 
       <category-menu
@@ -30,8 +31,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { useRecipeStore } from '../stores/recipes'
+import { useRoute, useRouter } from 'vue-router'
 import CategoryMenu from 'components/CategoryMenu.vue'
 
 export default defineComponent({
@@ -43,16 +45,22 @@ export default defineComponent({
 
   setup () {
     const $store = useRecipeStore()
+    const $route = useRoute()
+    const $router = useRouter()
+    const leftDrawerOpen = ref($store.leftDrawerOpen)
 
     const categories = computed(() => {
       return $store.categories
     })
 
-    const leftDrawerOpen = computed(() => {
-      return $store.leftDrawerOpen
-    })
+    const toggleLeftDrawer = () => {
+      leftDrawerOpen.value = !leftDrawerOpen.value
+    }
 
-    const removeFilter = () => {
+    const removeFilter = async () => {
+      if ($route.path !== '/') {
+        await $router.push('/')
+      }
       $store.removeCategoryFilter()
     }
 
@@ -64,7 +72,8 @@ export default defineComponent({
       leftDrawerOpen,
       categories,
       removeFilter,
-      thereIsAFilter
+      thereIsAFilter,
+      toggleLeftDrawer
     }
   }
 })

@@ -22,6 +22,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { useRouter } from 'vue-router'
 import { useRecipeStore } from '../stores/recipes'
 
 export default defineComponent({
@@ -42,12 +43,16 @@ export default defineComponent({
   },
   setup () {
     const $store = useRecipeStore()
-    const filterByType = async (event: Partial<Event>) => {
+    const $router = useRouter()
+    const filterByType = async (event: Event) => {
       let target = event.target as HTMLElement
       while (!target.classList.contains('q-item')) {
         target = target.parentNode as HTMLElement
       }
       await $store.selectCategory(target)
+      if ($router.currentRoute.value.path !== '/') {
+        await $router.push('/')
+      }
       $store.selectRecipe(target)
     }
     return {

@@ -19,7 +19,7 @@
       </q-toolbar>
     </q-header>
 
-    <left-drawer/>
+    <left-drawer ref="leftDrawer"/>
 
     <q-page-container>
       <router-view />
@@ -42,6 +42,7 @@ export default defineComponent({
   setup () {
     const $store = useRecipeStore()
 
+    const leftDrawer = ref()
     $store.worker.onmessage = message => {
       const type = message.data.type.toLowerCase()
       if (type === 'init') {
@@ -51,8 +52,10 @@ export default defineComponent({
     }
 
     return {
+      leftDrawer,
       toggleLeftDrawer () {
-        $store.leftDrawerOpen = !$store.leftDrawerOpen
+        leftDrawer.value.toggleLeftDrawer()
+        // $store.leftDrawerOpen = !$store.leftDrawerOpen
       },
       category: computed(() => {
         return $store.selected.category

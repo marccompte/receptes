@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { useRoute } from 'vue-router'
 import { Category, Recipe } from './models'
 
 const worker = new Worker('worker.js')
@@ -21,20 +22,29 @@ export const useRecipeStore = defineStore('recipes', {
     }
   }),
   getters: {
-    doubleCount: (state) => state.counter * 2
+    doubleCount: (state) => state.counter * 2,
+    currentRecipe: (state) => {
+      const $route = useRoute()
+      return state.recipes.find((recipe: Recipe) => {
+        const currentRecipe = JSON.parse(JSON.stringify($route.params))
+        return recipe.key === parseInt(currentRecipe.key)
+      })
+    }
   },
   actions: {
-    increment () {
-      this.counter++
+    getCurrentRecipe () {
+      const $route = useRoute()
+      return this.recipes.find((recipe: Recipe) => {
+        const currentRecipe = JSON.parse(JSON.stringify($route.params))
+        return recipe.key === parseInt(currentRecipe.key)
+      })
     },
     removeCategoryFilter () {
-      console.log('remove')
       this.selected.category = ''
       Object.values(this.categories).forEach((category: Category) => {
         category.isSelected = false
       })
       Object.values(this.recipes).forEach((recipe: Recipe) => {
-        console.log(recipe)
         recipe.isFiltered = false
       })
     },

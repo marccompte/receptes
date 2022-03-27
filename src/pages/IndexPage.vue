@@ -1,41 +1,45 @@
 <template>
-  <q-item class="flex justify-center row">
-    <q-input
-      placeholder="Cerca recepta, ingredient,..."
-      v-model="searchString"
-      @keyup="search"
-      style="width: 350px;">
-    </q-input>
-  </q-item>
-  <q-page class="row">
-    <q-card
-      class="my-card text-indigo"
-      v-for="recipe in recipes"
-      :key="recipe.key"
-      :class="{ filtered: recipe.isFiltered }"
-      >
-      <q-card-section class="title">
-        <div class="text-subtitle2"><q-icon :name="getIcon(recipe)" /> {{ recipe.cat }} <em v-if="recipe.sub">{{ recipe.sub }}</em></div>
-        <div class="text-h6">{{ recipe.tit }}</div>
-      </q-card-section>
+  <div>
+    <q-item class="flex justify-center row">
+      <q-input
+        placeholder="Cerca recepta, ingredient,..."
+        v-model="searchString"
+        @keyup="search"
+        style="width: 350px;">
+      </q-input>
+    </q-item>
+    <q-page class="row">
+      <q-card
+        class="my-card text-indigo"
+        v-for="recipe in recipes"
+        :key="recipe.key"
+        :data-id="recipe.key"
+        :class="{ filtered: recipe.isFiltered }"
+        >
+        <q-card-section class="title">
+          <div class="text-subtitle2"><q-icon :name="getIcon(recipe)" size="2em" /> {{ recipe.cat }} <em v-if="recipe.sub">{{ recipe.sub }}</em></div>
+          <div class="text-h6">{{ recipe.tit }}</div>
+        </q-card-section>
 
-      <q-card-section class="abstract">
-        <h6>Pas 1/{{ recipe.stp.length }}</h6>
-        {{ recipe.stp[0] }}
-      </q-card-section>
+        <q-card-section class="abstract">
+          <h6>Pas 1/{{ recipe.stp.length }}</h6>
+          {{ recipe.stp[0][0].toUpperCase() }}{{ recipe.stp[0].substring(1) }}
+        </q-card-section>
 
-      <q-separator dark />
+        <q-separator dark />
 
-      <q-card-actions class="absolute-bottom">
-        <q-btn color="brown-5">Veure tota la recepta</q-btn>
-      </q-card-actions>
-    </q-card>
-  </q-page>
+        <q-card-actions class="absolute-bottom">
+          <q-btn color="brown-5" @click="showRecipe">Veure tota la recepta</q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-page>
+  </div>
 </template>
 
 <script lang="ts">
 import { Meta } from '../components/models'
 import { computed, defineComponent, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useRecipeStore } from '../stores/recipes'
 import { Category, Recipe } from '../stores/models'
 
@@ -43,6 +47,7 @@ export default defineComponent({
   name: 'IndexPage',
   setup () {
     const $store = useRecipeStore()
+    const $router = useRouter()
     const searchString = ref()
     const meta = ref<Meta>({
       totalCount: 1200
@@ -87,12 +92,25 @@ export default defineComponent({
       }
       return ''
     }
+    const showRecipe = (event: Event) => {
+      let target = event.target as HTMLElement
+      while (!target.classList.contains('q-card')) {
+        target = target.parentNode as HTMLElement
+      }
+      const id = target.dataset.id
+      if (id) {
+        const url = '/recipe/' + id.toString()
+        $router.push(url)
+      }
+      // document.location target.dataset.id)
+    }
     return {
       getIcon,
       meta,
       recipes,
       search,
-      searchString
+      searchString,
+      showRecipe
     }
   }
 })
@@ -108,7 +126,10 @@ h6 {
   color: $seco;
 }
 .text-subtitle2 {
-  color: $brown-5;
+  color: $brown-3;
+}
+.text-subtitle2 .q-icon {
+  padding-right: 10px;
 }
 .abstract {
   height: 205px;

@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          Receptes <span class="category-title" v-show="category">{{ category }}</span>
+          <span class="category-title" v-show="title" v-for="part in title" :key="part">{{ part }}</span>
         </q-toolbar-title>
 
         <div>v2</div>
@@ -28,7 +28,8 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onBeforeMount } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { useRecipeStore } from '../stores/recipes'
 import LeftDrawer from 'components/LeftDrawer.vue'
 
@@ -41,7 +42,7 @@ export default defineComponent({
 
   setup () {
     const $store = useRecipeStore()
-
+    const $route = useRoute()
     const leftDrawer = ref()
     $store.worker.onmessage = message => {
       const type = message.data.type.toLowerCase()
@@ -57,8 +58,24 @@ export default defineComponent({
         leftDrawer.value.toggleLeftDrawer()
         // $store.leftDrawerOpen = !$store.leftDrawerOpen
       },
-      category: computed(() => {
-        return $store.selected.category
+      title: computed(() => {
+        if ($route.path === '/') {
+          if ($store.selected.category) {
+            return ['Receptes', $store.selected.category]
+          } else {
+            return ['Receptes']
+          }
+        } else {
+          const currentRecipe = JSON.parse(JSON.stringify($store.currentRecipe))
+          if (currentRecipe) {
+            return [
+              currentRecipe.cat,
+              currentRecipe.tit.substring(0, 1).toUpperCase() + currentRecipe.tit.substring(1)
+            ]
+          } else {
+            return ['Receptes', $store.selected.category]
+          }
+        }
       })
     }
   }

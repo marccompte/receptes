@@ -4,10 +4,17 @@
       <q-toolbar-title>Ingredients</q-toolbar-title>
     </q-toolbar>
     <div class="flex justify-center q-col-gutter-xs">
-      <q-card clickable v-ripple v-for="ing in currentRecipe.ing" :key="ing[1]">
+      <q-card
+        clickable
+        v-ripple
+        v-for="ing in currentRecipe.ing"
+        :key="ing.key"
+        :class="{ done: ing.done }"
+        @click="toggleIngredient(ing)"
+        >
         <q-item-section>
-          <q-item-label>{{ ing[0] }}</q-item-label>
-          <q-item-label caption>{{ ing[1] }}</q-item-label>
+          <q-item-label>{{ ing.name }}</q-item-label>
+          <q-item-label caption>{{ ing.description }}</q-item-label>
         </q-item-section>
       </q-card>
     </div>
@@ -39,12 +46,18 @@ export default defineComponent({
     const $store = useRecipeStore()
     const currentRecipe = computed(() => {
       if ($store.currentRecipe) {
-        return JSON.parse(JSON.stringify($store.currentRecipe))
+        return $store.currentRecipe
       } else {
         return ''
       }
     })
-    return { currentRecipe }
+    const toggleIngredient = (ing) => {
+      $store.currentRecipe.ing[ing.key].done = !$store.currentRecipe.ing[ing.key].done
+    }
+    return {
+      currentRecipe,
+      toggleIngredient
+    }
   }
 })
 </script>
@@ -56,6 +69,26 @@ export default defineComponent({
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
+  }
+  .q-card.done {
+    background: white;
+    color: #cacaca;
+    text-decoration: line-through;
+  }
+  .q-card.done::after {
+    content: 'fet';
+    color: white;
+    background: #a9dba9;
+    padding: 2px 10px;
+    border-bottom-left-radius: 5px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    font-size: .8em;
+  }
+  .q-card.done .text-caption {
+    color: #cacaca;
+    text-decoration: line-through;
   }
   .q-toolbar__title {
     border-bottom: 2px solid $primary;
@@ -74,15 +107,18 @@ export default defineComponent({
     flex-direction: column;
     justify-content: flex-start;
     width: 200px;
-    background: white;
+    background: $seco;
     margin: 10px;
     overflow: hidden;
     float: left;
     text-align: center;
     font-size: 1.3rem;
+    color: $primary;
+    cursor: pointer;
   }
   .q-card .text-caption {
     font-size: .8rem;
+    color: $primary;
   }
   .q-list {
     width: 100%;

@@ -2,7 +2,7 @@
   <div class="loading" v-if="loading">
     <q-spinner-cube
           color="primary"
-          size="20em"
+          size="10em"
         />
     <p>Carregant receptes ...</p>
   </div>
@@ -29,22 +29,22 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.loading {
-  width: 100%;
-  height: 100%;
-  background-color: white;
-  z-index: 10000;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-shadow: 2px 2px  5px $primary;
-}
-.loading p {
-  font-size: 3em;
-  color: $primary;
-}
+  .loading {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    z-index: 10000;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-shadow: 2px 2px  5px $primary;
+  }
+  .loading p {
+    font-size: 2em;
+    color: $primary;
+  }
 </style>

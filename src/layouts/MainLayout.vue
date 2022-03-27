@@ -47,13 +47,8 @@ export default defineComponent({
       if (type === 'init') {
         $store.recipes = message.data.data.items
         $store.categories = message.data.data.categories
-        console.log($store.categories[0])
       }
     }
-
-    onBeforeMount(() => {
-      $store.worker.postMessage({ type: 'init', data: JSON.parse(JSON.stringify($store.dbConfig)) })
-    })
 
     return {
       toggleLeftDrawer () {

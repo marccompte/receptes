@@ -74,6 +74,7 @@ export default defineComponent({
     background: white;
     color: #cacaca;
     text-decoration: line-through;
+    transition: all .6s ease-in;
   }
   .q-card.done::after {
     content: 'fet';
@@ -85,10 +86,12 @@ export default defineComponent({
     top: 0px;
     right: 0px;
     font-size: .8em;
+    transition: all .6s ease-in;
   }
   .q-card.done .text-caption {
     color: #cacaca;
     text-decoration: line-through;
+    transition: all .6s ease-in;
   }
   .q-toolbar__title {
     border-bottom: 2px solid $primary;
@@ -115,10 +118,12 @@ export default defineComponent({
     font-size: 1.3rem;
     color: $primary;
     cursor: pointer;
+    transition: all .6s ease-out;
   }
   .q-card .text-caption {
     font-size: .8rem;
     color: $primary;
+    transition: all .6s ease-out;
   }
   .q-list {
     width: 100%;

@@ -88,7 +88,7 @@ export default defineComponent({
     transition: all .3s ease-out;
   }
   .q-item.selected {
-    background: $orange-8;
+    background: $accent;
     color: white;
     transition: all .3s ease-in;
   }
@@ -97,7 +97,7 @@ export default defineComponent({
     transition: all .3s ease-in;
   }
   :deep(.q-item.selected) .q-item__label--caption {
-    color: #ffd7c1;
+    color: $help-text;
     transition: all .3s ease-in;
   }
   :deep(.q-drawer) {

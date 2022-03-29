@@ -1,9 +1,23 @@
+export interface Ingredient {
+  key: number;
+  name: string;
+  description: string;
+  done: boolean;
+}
+
+export interface Step {
+  key: number;
+  name: string;
+  done: boolean;
+}
+
 export interface Recipe {
   key: number;
   tit: string;
   cat: string;
-  ing: [[string]];
+  ing: [Ingredient];
   sub?: string;
+  stp: [Step];
   isFiltered: boolean;
 }
 
@@ -15,7 +29,11 @@ export interface Category {
   subs: [string];
 }
 
-export interface Ingredient {
-  0: string;
-  1: string;
-}
+// export interface FlatRecipe {
+//   key: number;
+//   tit: string;
+//   cat: string;
+//   ing: [[string]];
+//   sub?: string;
+//   isFiltered: boolean;
+// }

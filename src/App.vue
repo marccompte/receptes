@@ -27,6 +27,14 @@ export default defineComponent({
       })
     })
 
+    $store.worker.onmessage = message => {
+      const type = message.data.type.toLowerCase()
+      if (type === 'init') {
+        $store.recipes = message.data.data.items
+        $store.categories = message.data.data.categories
+      }
+    }
+
     return {
       loading
     }

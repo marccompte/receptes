@@ -2,6 +2,7 @@
   <q-page class="row">
     <q-toolbar class="bg-white text-primary">
       <q-toolbar-title>Ingredients</q-toolbar-title>
+      <p class="caption">Prem un ingredient per marcar-lo com a fet.</p>
     </q-toolbar>
     <div class="flex justify-center q-col-gutter-xs">
       <q-card
@@ -21,29 +22,46 @@
 
     <q-toolbar class="bg-white text-primary">
       <q-toolbar-title>Elaboració</q-toolbar-title>
+      <p class="caption">Prem un pas per marcar-lo com a fet.</p>
     </q-toolbar>
-    <q-list bordered separator>
-      <q-item clickable v-ripple v-for="(stp, index) in currentRecipe.stp" :key="stp">
+    <q-list separator>
+      <q-item
+        clickable
+        v-ripple
+        v-for="(stp, index) in currentRecipe.stp"
+        :key="stp.key"
+        :class="{ done: stp.done }"
+        @click="toggleStep(stp)"
+        >
         <q-item-section>
           <q-item-label overline>Pas {{ index + 1 }}</q-item-label>
-          <q-item-label>{{ stp[0].toUpperCase() }}{{ stp.substring(1) }}</q-item-label>
+          <q-item-label>{{ stp.description }}</q-item-label>
         </q-item-section>
       </q-item>
     </q-list>
-    <div class="end flex justify-center">
-      <h6>Bon profit!</h6>
-    </div>
+    <base-modal :open="bonProfit" buttons="close">
+      <template v-slot:default>
+        <h1>Bon profit!</h1>
+        <p>Has trigat {{ duration }} <span v-if="duration !== 1">minuts</span><span v-if="duration === 1">minut</span></p>
+      </template>
+    </base-modal>
   </q-page>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, onMounted } from 'vue'
 import { useRecipeStore } from '../stores/recipes'
+import { Ingredient, Step } from '../stores/models'
+import BaseModal from '../components/BaseModal.vue'
 
 export default defineComponent({
   name: 'IndexPage',
+  components: {
+    BaseModal
+  },
   setup () {
     const $store = useRecipeStore()
+    let start
     const currentRecipe = computed(() => {
       if ($store.currentRecipe) {
         return $store.currentRecipe
@@ -51,11 +69,34 @@ export default defineComponent({
         return ''
       }
     })
-    const toggleIngredient = (ing) => {
-      $store.currentRecipe.ing[ing.key].done = !$store.currentRecipe.ing[ing.key].done
+    const toggleIngredient = async (ing: Ingredient) => {
+      if ($store.currentRecipe) {
+        $store.currentRecipe.ing[ing.key].done = !$store.currentRecipe.ing[ing.key].done
+      }
     }
+    const toggleStep = async (stp: Step) => {
+      if ($store.currentRecipe) {
+        $store.currentRecipe.stp[stp.key].done = !$store.currentRecipe.stp[stp.key].done
+      }
+      const missing = $store.currentRecipe.stp.find((stp: Step) => !stp.done)
+      if (!missing) {
+        const seconds = parseInt((new Date() - start) / (1000))
+        $store.duration = parseInt(seconds / 60)
+        $store.bonProfit = true
+      }
+    }
+    const bonProfit = computed(() => $store.bonProfit)
+    onMounted(() => {
+      start = new Date()
+    })
+    const duration = computed(() => {
+      return $store.duration
+    })
     return {
+      bonProfit,
       currentRecipe,
+      duration,
+      toggleStep,
       toggleIngredient
     }
   }
@@ -70,32 +111,67 @@ export default defineComponent({
     justify-content: flex-start;
     align-items: flex-start;
   }
+  .q-item {
+    padding: 15px;
+    min-width: 100%;
+    max-height: 200px;
+    overflow: auto;
+    background: $seco;
+    display: flex;
+    flex-direction: column;
+    transition: all .6s ease-in;
+    box-shadow: 0 1px 5px rgb(0 0 0 / 20%), 0 2px 2px rgb(0 0 0 / 14%), 0 3px 1px -2px rgb(0 0 0 / 12%);
+  }
   .q-card.done {
+    height: 40px;
+    transition: all .6s ease-in;
+  }
+  .q-item.done {
+    max-height: 40px;
+    overflow: hidden;
+  }
+  .q-card.done,
+  .q-item.done {
     background: white;
     color: #cacaca;
     text-decoration: line-through;
     transition: all .6s ease-in;
   }
-  .q-card.done::after {
+  .q-item.done::after {
+    height: 48px;
+    line-height: 48px;
+    font-size: 2em;
+  }
+  .done::after {
     content: 'fet';
     color: white;
-    background: #a9dba9;
+    background: $accent;
     padding: 2px 10px;
-    border-bottom-left-radius: 5px;
     position: absolute;
     top: 0px;
     right: 0px;
+    height: 40px;
+    line-height: 40px;
     font-size: .8em;
     transition: all .6s ease-in;
   }
+  .q-toolbar .caption {
+    color: rgba(0, 0, 0, 0.54);
+  }
+  .q-item.done .text-overline,
   .q-card.done .text-caption {
     color: #cacaca;
     text-decoration: line-through;
     transition: all .6s ease-in;
   }
+  .q-toolbar {
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+  }
   .q-toolbar__title {
     border-bottom: 2px solid $primary;
-    margin: 40px 0px;
+    margin: 40px 0px 0px;
   }
   .end {
     width: 100%;
@@ -126,15 +202,14 @@ export default defineComponent({
     transition: all .6s ease-out;
   }
   .q-list {
-    width: 100%;
-  }
-  .q-item {
-    padding: 20px;
-    min-width: 100%;
+    margin: 20px;
+    width: calc(100% - 40px);
+    transition: all .6s ease-in;
   }
   .text-overline {
     text-transform: uppercase;
     font-size: 1.2em;
     margin-bottom: 10px;
+    transition: all .6s ease-in;
   }
 </style>

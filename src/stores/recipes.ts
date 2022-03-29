@@ -6,6 +6,7 @@ const worker = new Worker('worker.js')
 
 export const useRecipeStore = defineStore('recipes', {
   state: () => ({
+    bonProfit: false,
     counter: 0,
     worker: worker,
     recipes: [],

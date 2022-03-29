@@ -48,23 +48,6 @@ export default defineComponent({
     const $store = useRecipeStore()
     const $route = useRoute()
     const leftDrawer = ref()
-    $store.worker.onmessage = message => {
-      const type = message.data.type.toLowerCase()
-      if (type === 'init') {
-        message.data.data.items.forEach(recipe => {
-          recipe.ing = recipe.ing.map((ing: [string], index: number) => {
-            return {
-              key: index,
-              name: ing[0][0].toUpperCase() + ing[0].substring(1),
-              description: (ing[1] && ing[1].length > 1) ? ing[1][0].toUpperCase() + ing[1].substring(1) : ing[1],
-              done: false
-            }
-          })
-        })
-        $store.recipes = message.data.data.items
-        $store.categories = message.data.data.categories
-      }
-    }
 
     return {
       leftDrawer,
@@ -79,14 +62,10 @@ export default defineComponent({
             return ['Receptes']
           }
         } else {
-          let currentRecipe = false
           if ($store.currentRecipe) {
-            currentRecipe = JSON.parse(JSON.stringify($store.currentRecipe))
-          }
-          if (currentRecipe) {
             return [
-              currentRecipe.cat,
-              currentRecipe.tit.substring(0, 1).toUpperCase() + currentRecipe.tit.substring(1)
+              $store.currentRecipe.cat,
+              $store.currentRecipe.tit.substring(0, 1).toUpperCase() + $store.currentRecipe.tit.substring(1)
             ]
           } else {
             return [$store.selected.category, 'Loading']

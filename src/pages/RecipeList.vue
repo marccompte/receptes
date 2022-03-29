@@ -21,7 +21,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue'
 import { useRecipeStore } from '../stores/recipes'
-import { Recipe } from '../stores/models'
+import { Ingredient, Recipe } from '../stores/models'
 import RecipeCard from '../components/RecipeCard.vue'
 
 export default defineComponent({
@@ -34,10 +34,8 @@ export default defineComponent({
       return $store.recipes
     })
     const hasIngredient = (recipe: Recipe, value: string) => {
-      return recipe.ing.find(ing => {
-        return ing.find((label: string) => {
-          return label && label.toLowerCase().indexOf(value) !== -1
-        })
+      return recipe.ing.find((ing: Ingredient) => {
+        return ing.name.toLowerCase() === value.toLowerCase()
       })
     }
     const search = (event: Event) => {

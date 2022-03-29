@@ -60,6 +60,21 @@ const init = data => {
         })
       }
       item.key = parseInt(item.key)
+      item.ing = item.ing.map((ing, index) => {
+        return {
+          key: index,
+          name: capitalize(ing[0]),
+          description: ing[1] ? capitalize(ing[1]) : ing[1],
+          done: false
+        }
+      })
+      item.stp = item.stp.map((stp, index) => {
+        return {
+          key: index,
+          description: capitalize(stp),
+          done: false
+        }
+      })
       if ('sub' in item) {
         const current = json.categories[json.categories.length - 1]
         if (!current.subs.includes(item.sub)) current.subs.push(item.sub)
@@ -72,6 +87,10 @@ const init = data => {
   })
 }
 
+
+const capitalize = str => {
+  return str[0].toUpperCase() + str.substring(1)
+}
 
 const returnError = error => {
   self.postMessage({

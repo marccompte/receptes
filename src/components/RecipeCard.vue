@@ -14,7 +14,7 @@
 
     <q-card-section class="abstract">
       <h6>Pas 1/{{ recipe.stp.length }}</h6>
-      {{ recipe.stp[0][0].toUpperCase() }}{{ recipe.stp[0].substring(1) }}
+      {{ recipe.stp[0].description }}
     </q-card-section>
 
     <q-card-actions class="absolute-bottom">

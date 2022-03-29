@@ -5,19 +5,13 @@
       <p class="caption">Prem un ingredient per marcar-lo com a fet.</p>
     </q-toolbar>
     <div class="flex justify-center q-col-gutter-xs">
-      <q-card
-        clickable
-        v-ripple
+      <ingredient-card
         v-for="ing in currentRecipe.ing"
+        :ing="ing"
         :key="ing.key"
         :class="{ done: ing.done }"
         @click="toggleIngredient(ing)"
-        >
-        <q-item-section>
-          <q-item-label>{{ ing.name }}</q-item-label>
-          <q-item-label caption>{{ ing.description }}</q-item-label>
-        </q-item-section>
-      </q-card>
+        />
     </div>
 
     <q-toolbar class="bg-white text-primary">
@@ -53,11 +47,13 @@ import { defineComponent, computed, onMounted } from 'vue'
 import { useRecipeStore } from '../stores/recipes'
 import { Ingredient, Step } from '../stores/models'
 import BaseModal from '../components/BaseModal.vue'
+import IngredientCard from '../components/IngredientCard.vue'
 
 export default defineComponent({
   name: 'IndexPage',
   components: {
-    BaseModal
+    BaseModal,
+    IngredientCard
   },
   setup () {
     const $store = useRecipeStore()

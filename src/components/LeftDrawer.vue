@@ -22,14 +22,15 @@
     <q-item class="flex justify-center">
       <q-btn
         label="Veure-les totes"
-        color="brown-5"
+        color="accent"
         @click="removeFilter"
         v-show="thereIsAFilter">
       </q-btn>
     </q-item>
     <q-item class="flex justify-center">
       <q-btn
-        label="Veure-les totes"
+        icon="add"
+        label="Afegir recepta"
         color="brown-5"
         @click="removeFilter"
         v-if="userIsAdmin">

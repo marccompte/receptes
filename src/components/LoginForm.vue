@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="login" method="post">
+  <form @submit.prevent="login" method="post" v-if="!userIsAdmin">
     <base-spinner class="spinner" v-if="isLoggingIn"/>
     <div class="errors" v-if="loginErrors">{{ loginErrors }}</div>
     <div class="field">
@@ -18,6 +18,14 @@
     </div>
     <button>Valida</button>
   </form>
+  <form @submit.prevent="logout" method="post" v-if="userIsAdmin">
+    <base-spinner class="spinner" v-if="isLoggingIn"/>
+    <div class="errors" v-if="loginErrors">{{ loginErrors }}</div>
+    <div class="field">
+      Ja estàs identificat com a administrador.
+    </div>
+    <button>Tanca la sessió</button>
+  </form>
 </template>
 
 <script>
@@ -34,6 +42,7 @@ export default {
     const username = ref()
     const password = ref()
     const isLoggingIn = computed(() => $store.isLoggingIn)
+    const userIsAdmin = computed(() => $store.userIsAdmin)
 
     const login = () => {
       $store.isLoggingIn = true
@@ -45,6 +54,10 @@ export default {
           password: password.value
         }
       })
+    }
+
+    const logout = () => {
+      $store.userIsAdmin = false
     }
 
     const showLoginForm = () => {
@@ -60,9 +73,11 @@ export default {
       isLoggingIn,
       isPwd: ref(true),
       login,
+      logout,
       loginErrors,
       showLoginForm,
       password,
+      userIsAdmin,
       username
     }
   }

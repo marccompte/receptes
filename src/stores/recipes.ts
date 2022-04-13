@@ -7,7 +7,7 @@ const worker = new Worker('worker.js')
 export const useRecipeStore = defineStore('recipes', {
   state: () => ({
     bonProfit: false,
-    counter: 0,
+    duration: 0,
     worker: worker,
     recipes: [],
     categories: [],
@@ -23,13 +23,12 @@ export const useRecipeStore = defineStore('recipes', {
     }
   }),
   getters: {
-    doubleCount: (state) => state.counter * 2,
     currentRecipe: (state) => {
       const $route = useRoute()
       return state.recipes.find((recipe: Recipe) => {
         const currentRecipe = JSON.parse(JSON.stringify($route.params))
         return recipe.key === parseInt(currentRecipe.key)
-      })
+      }) as any
     }
   },
   actions: {

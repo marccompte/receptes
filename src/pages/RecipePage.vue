@@ -57,7 +57,7 @@ export default defineComponent({
   },
   setup () {
     const $store = useRecipeStore()
-    let start
+    let start: number
     const currentRecipe = computed(() => {
       if ($store.currentRecipe) {
         return $store.currentRecipe
@@ -76,14 +76,14 @@ export default defineComponent({
       }
       const missing = $store.currentRecipe.stp.find((stp: Step) => !stp.done)
       if (!missing) {
-        const seconds = parseInt((new Date() - start) / (1000))
-        $store.duration = parseInt(seconds / 60)
+        const seconds = ((new Date()).getTime() - start) / (1000)
+        $store.duration = seconds / 60
         $store.bonProfit = true
       }
     }
     const bonProfit = computed(() => $store.bonProfit)
     onMounted(() => {
-      start = new Date()
+      start = (new Date()).getTime()
     })
     const duration = computed(() => {
       return $store.duration
@@ -115,12 +115,12 @@ export default defineComponent({
     background: $seco;
     display: flex;
     flex-direction: column;
-    transition: all .6s ease-in;
+    transition: all .3s ease-in;
     box-shadow: 0 1px 5px rgb(0 0 0 / 20%), 0 2px 2px rgb(0 0 0 / 14%), 0 3px 1px -2px rgb(0 0 0 / 12%);
   }
   .q-card.done {
     height: 40px;
-    transition: all .6s ease-in;
+    transition: all .3s ease-in;
   }
   .q-item.done {
     max-height: 40px;
@@ -131,7 +131,7 @@ export default defineComponent({
     background: white;
     color: #cacaca;
     text-decoration: line-through;
-    transition: all .6s ease-in;
+    transition: all .3s ease-in;
   }
   .q-item.done::after {
     height: 48px;
@@ -149,7 +149,7 @@ export default defineComponent({
     height: 40px;
     line-height: 40px;
     font-size: .8em;
-    transition: all .6s ease-in;
+    transition: all .3s ease-in;
   }
   .q-toolbar .caption {
     color: rgba(0, 0, 0, 0.54);
@@ -158,7 +158,7 @@ export default defineComponent({
   .q-card.done .text-caption {
     color: #cacaca;
     text-decoration: line-through;
-    transition: all .6s ease-in;
+    transition: all .3s ease-in;
   }
   .q-toolbar {
     display: flex;
@@ -190,22 +190,22 @@ export default defineComponent({
     font-size: 1.3rem;
     color: $primary;
     cursor: pointer;
-    transition: all .6s ease-out;
+    transition: all .3s ease-out;
   }
   .q-card .text-caption {
     font-size: .8rem;
     color: $primary;
-    transition: all .6s ease-out;
+    transition: all .3s ease-out;
   }
   .q-list {
     margin: 20px;
     width: calc(100% - 40px);
-    transition: all .6s ease-in;
+    transition: all .3s ease-in;
   }
   .text-overline {
     text-transform: uppercase;
     font-size: 1.2em;
     margin-bottom: 10px;
-    transition: all .6s ease-in;
+    transition: all .3s ease-in;
   }
 </style>

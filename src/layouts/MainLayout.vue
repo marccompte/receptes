@@ -15,7 +15,7 @@
           <span class="category-title" v-show="title" v-for="part in title" :key="part">{{ part }}</span>
         </q-toolbar-title>
 
-        <div>v2</div>
+        <div @click="showLoginForm">v2</div>
       </q-toolbar>
     </q-header>
 
@@ -28,6 +28,14 @@
         </transition>
       </router-view>
     </q-page-container>
+
+    <base-modal :open="loginFormVisible" @close="hideLoginForm">
+      <template v-slot:default>
+        <h4>Identifica't</h4>
+        <login-form/>
+      </template>
+    </base-modal>
+
   </q-layout>
 </template>
 
@@ -36,21 +44,37 @@ import { computed, defineComponent, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useRecipeStore } from '../stores/recipes'
 import LeftDrawer from 'components/LeftDrawer.vue'
+import BaseModal from 'components/BaseModal.vue'
+import LoginForm from 'components/LoginForm.vue'
 
 export default defineComponent({
   name: 'MainLayout',
 
   components: {
-    LeftDrawer
+    BaseModal,
+    LeftDrawer,
+    LoginForm
   },
 
   setup () {
     const $store = useRecipeStore()
     const $route = useRoute()
     const leftDrawer = ref()
+    const loginFormVisible = computed(() => $store.modals.login)
+
+    const hideLoginForm = () => {
+      $store.modals.login = false
+    }
+
+    const showLoginForm = () => {
+      $store.modals.login = true
+    }
 
     return {
+      hideLoginForm,
       leftDrawer,
+      loginFormVisible,
+      showLoginForm,
       toggleLeftDrawer () {
         leftDrawer.value.toggleLeftDrawer()
       },
@@ -95,5 +119,17 @@ export default defineComponent({
   }
   .category-title:first-child::before {
     content: none;
+  }
+  :deep(dialog) {
+    padding: 0px;
+    width: 50vh;
+  }
+  :deep(dialog) h4 {
+    margin: 0px;
+    padding: 25px;
+    background: $seco;
+    color: $primary;
+    text-transform: uppercase;
+    font-weight: bold;
   }
 </style>

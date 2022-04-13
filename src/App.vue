@@ -1,10 +1,6 @@
 <template>
   <div class="loading" v-if="loading">
-    <q-spinner-cube
-          color="primary"
-          size="10em"
-        />
-    <p>Carregant receptes ...</p>
+    <base-spinner label="Carregant receptes ..."/>
   </div>
   <router-view />
 </template>
@@ -12,9 +8,11 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, computed } from 'vue'
 import { useRecipeStore } from './stores/recipes'
+import BaseSpinner from './components/BaseSpinner.vue'
 
 export default defineComponent({
   name: 'App',
+  components: { BaseSpinner },
   setup () {
     const $store = useRecipeStore()
 
@@ -33,6 +31,16 @@ export default defineComponent({
         $store.recipes = message.data.data.items
         $store.categories = message.data.data.categories
       }
+      if (type === 'login') {
+        $store.isLoggingIn = false
+        if (message.data.data.error) {
+          $store.userIsAdmin = false
+          $store.errors.login = 'Les credencials no són vàlides.'
+        } else {
+          $store.userIsAdmin = true
+          $store.modals.login = false
+        }
+      }
     }
 
     return {
@@ -42,7 +50,7 @@ export default defineComponent({
 })
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
   .loading {
     width: 100%;
     height: 100%;

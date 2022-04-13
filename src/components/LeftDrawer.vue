@@ -27,6 +27,14 @@
         v-show="thereIsAFilter">
       </q-btn>
     </q-item>
+    <q-item class="flex justify-center">
+      <q-btn
+        label="Veure-les totes"
+        color="brown-5"
+        @click="removeFilter"
+        v-if="userIsAdmin">
+      </q-btn>
+    </q-item>
   </q-drawer>
 </template>
 
@@ -73,7 +81,10 @@ export default defineComponent({
       categories,
       removeFilter,
       thereIsAFilter,
-      toggleLeftDrawer
+      toggleLeftDrawer,
+      userIsAdmin: computed(() => {
+        return $store.userIsAdmin
+      })
     }
   }
 })

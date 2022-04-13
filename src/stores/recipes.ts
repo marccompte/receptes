@@ -11,6 +11,14 @@ export const useRecipeStore = defineStore('recipes', {
     worker: worker,
     recipes: [],
     categories: [],
+    userIsAdmin: false,
+    isLoggingIn: false,
+    modals: {
+      login: false
+    },
+    errors: {
+      login: ''
+    },
     selected: {
       category: ''
     },
@@ -28,7 +36,7 @@ export const useRecipeStore = defineStore('recipes', {
       return state.recipes.find((recipe: Recipe) => {
         const currentRecipe = JSON.parse(JSON.stringify($route.params))
         return recipe.key === parseInt(currentRecipe.key)
-      }) as any
+      }) as unknown as Recipe
     }
   },
   actions: {

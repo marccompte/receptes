@@ -6,7 +6,7 @@
     <div class="dialog" v-if="open" @click="close">
       <dialog open>
         <slot></slot>
-        <div class="buttons">
+        <div class="buttons" v-if="buttons">
           <slot name="buttons"></slot>
           <button @click="close" v-if="hasCloseButton" class="close">Tanca</button>
         </div>
@@ -17,22 +17,19 @@
 
 <script>
 import { computed } from 'vue'
-import { useRecipeStore } from '../stores/recipes'
 
 export default {
   props: ['open', 'buttons'],
   emits: ['close'],
-  setup (props) {
-    const $store = useRecipeStore()
-    const close = function () {
-      $store.bonProfit = false
+  setup (props, context) {
+    const close = function (event) {
+      if (event.target.classList.contains('close') || event.target.classList.contains('dialog')) {
+        context.emit('close')
+      }
     }
     const hasCloseButton = computed(() => {
       return props.buttons && props.buttons.split(',').includes('close')
     })
-    // const _ = function (text) {
-    //   return $store.getters['app/getText'](text)
-    // }
     return {
       close,
       hasCloseButton
@@ -65,8 +62,7 @@ export default {
 dialog {
   max-width: 80vh;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-  text-shadow: 2px 2px  5px $primary;
-  padding: 3rem 5rem 3rem 5rem;
+  padding: 0px;
   background-color: white;
   z-index: 2001;
   border: none;
@@ -94,20 +90,20 @@ dialog {
   opacity: 0;
   top: 5vh;
 }
-button {
-  background: $primary;
+:deep(button) {
+  background: $seco;
   border: none;
-  color: white;
+  color: $primary;
+  border: 1px solid $primary;
   text-transform: uppercase;
   padding: 15px 50px;
   cursor: pointer;
+  border-radius: 4px;
   font-weight: bold;
+  font-size: 1.5em;
 }
-button:hover {
+:deep(button):hover {
   background: $primary;
-  color: $accent;
-}
-button.close {
-  // float: right;
+  color: $seco;
 }
 </style>

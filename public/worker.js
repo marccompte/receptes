@@ -1,25 +1,82 @@
+let DETA_ID, DETA_KEY, DETA_NAME
+
 self.onmessage = function (message) {
   const type = message.data.type.toLowerCase()
   if (type === 'init') {
     init(message.data.data)
   }
+  if (type === 'login') {
+    login(message.data.data)
+  }
 }
 
-const init = data => {
-  const root = `https://database.deta.sh/v1/${data.DETA_ID}/${data.DETA_NAME}/`
-  fetch(`${root}query`, {
-    method: 'POST',
+const login = data => {
+  const rootUsers = `https://database.deta.sh/v1/${DETA_ID}/users/`
+  fetch(`${rootUsers}items/${data.username}`, {
+    method: 'GET',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'X-API-Key': data.DETA_KEY
+      'X-API-Key': DETA_KEY
     }
   }).then(response => {
     if (response.ok) {
       return response.json()
     }
     else {
-      returnError(response)
+      response.json().then(r => {
+        if (!Object.keys(r).includes('username')) {
+          self.postMessage({
+            type: 'login',
+            data: { error: true }
+          })
+        }
+      })
+    }
+  }).then(json => {
+    if (json) {
+      sha256(data.password).then(hash => {
+        let answer = {
+          type: 'login',
+          data: { error: true }
+        }
+        if (json.password === hash) {
+          answer.data.error = false
+        }
+        self.postMessage(answer)
+      })
+    }
+  })
+}
+
+let users = []
+
+const init = data => {
+  DETA_ID = data.DETA_ID
+  DETA_KEY = data.DETA_KEY
+  DETA_NAME = data.DETA_NAME
+  loadRecipes(data)
+}
+
+
+const loadRecipes = data => {
+  const root = `https://database.deta.sh/v1/${DETA_ID}/${DETA_NAME}/`
+  fetch(`${root}query`, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'X-API-Key': DETA_KEY
+    }
+  }).then(response => {
+    if (response.ok) {
+      return response.json()
+    }
+    else {
+      response.json().then(r => {
+        console.log(r)
+        returnError(r)
+      })
     }
   }).then(json => {
     json.items.sort((a, b) => {
@@ -88,11 +145,25 @@ const init = data => {
 }
 
 
+async function sha256 (message) {
+  // encode as UTF-8
+  const msgBuffer = new TextEncoder().encode(message)
+  // hash the message
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer)
+  // convert ArrayBuffer to Array
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  // convert bytes to hex string
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+}
+
+
 const capitalize = str => {
   return str[0].toUpperCase() + str.substring(1)
 }
 
+
 const returnError = error => {
+  console.log(error)
   self.postMessage({
     type: 'error',
     data: error

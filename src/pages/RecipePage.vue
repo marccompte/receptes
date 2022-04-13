@@ -33,7 +33,7 @@
         </q-item-section>
       </q-item>
     </q-list>
-    <base-modal :open="bonProfit" buttons="close">
+    <base-modal :open="bonProfit" buttons="close" @close="closeModal">
       <template v-slot:default>
         <h1>Bon profit!</h1>
         <p>Has trigat {{ duration }} <span v-if="duration !== 1">minuts</span><span v-if="duration === 1">minut</span></p>
@@ -65,6 +65,9 @@ export default defineComponent({
         return ''
       }
     })
+    const closeModal = function () {
+      $store.bonProfit = false
+    }
     const toggleIngredient = async (ing: Ingredient) => {
       if ($store.currentRecipe) {
         $store.currentRecipe.ing[ing.key].done = !$store.currentRecipe.ing[ing.key].done
@@ -90,6 +93,7 @@ export default defineComponent({
     })
     return {
       bonProfit,
+      closeModal,
       currentRecipe,
       duration,
       toggleStep,

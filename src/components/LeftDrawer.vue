@@ -32,7 +32,7 @@
         icon="add"
         label="Afegir recepta"
         color="brown-5"
-        @click="removeFilter"
+        @click="showRecipeForm"
         v-if="userIsAdmin">
       </q-btn>
     </q-item>
@@ -77,10 +77,15 @@ export default defineComponent({
       return $store.selected.category !== ''
     })
 
+    const showRecipeForm = () => {
+      $store.modals.recipe = true
+    }
+
     return {
       leftDrawerOpen,
       categories,
       removeFilter,
+      showRecipeForm,
       thereIsAFilter,
       toggleLeftDrawer,
       userIsAdmin: computed(() => {

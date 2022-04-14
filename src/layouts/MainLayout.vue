@@ -15,7 +15,7 @@
           <span class="category-title" v-show="title" v-for="part in title" :key="part">{{ part }}</span>
         </q-toolbar-title>
 
-        <div @click="showLoginForm">v2</div>
+        <div @click="showModal('login')">v2</div>
       </q-toolbar>
     </q-header>
 
@@ -29,10 +29,17 @@
       </router-view>
     </q-page-container>
 
-    <base-modal :open="loginFormVisible" @close="hideLoginForm">
+    <base-modal :open="loginFormVisible" @close="hideModal('login')">
       <template v-slot:default>
         <h4>Identifica't</h4>
         <login-form/>
+      </template>
+    </base-modal>
+
+    <base-modal :open="recipeFormVisible" @close="hideModal('recipe')">
+      <template v-slot:default>
+        <h4>Recepta</h4>
+        <recipe-form/>
       </template>
     </base-modal>
 
@@ -46,6 +53,7 @@ import { useRecipeStore } from '../stores/recipes'
 import LeftDrawer from 'components/LeftDrawer.vue'
 import BaseModal from 'components/BaseModal.vue'
 import LoginForm from 'components/LoginForm.vue'
+import RecipeForm from 'components/RecipeForm.vue'
 
 export default defineComponent({
   name: 'MainLayout',
@@ -53,7 +61,8 @@ export default defineComponent({
   components: {
     BaseModal,
     LeftDrawer,
-    LoginForm
+    LoginForm,
+    RecipeForm
   },
 
   setup () {
@@ -61,20 +70,17 @@ export default defineComponent({
     const $route = useRoute()
     const leftDrawer = ref()
     const loginFormVisible = computed(() => $store.modals.login)
+    const recipeFormVisible = computed(() => $store.modals.recipe)
 
-    const hideLoginForm = () => {
-      $store.modals.login = false
-    }
-
-    const showLoginForm = () => {
-      $store.modals.login = true
-    }
+    const showModal = (name) => { $store.modals[name] = true }
+    const hideModal = (name) => { $store.modals[name] = false }
 
     return {
-      hideLoginForm,
+      hideModal,
       leftDrawer,
       loginFormVisible,
-      showLoginForm,
+      recipeFormVisible,
+      showModal,
       toggleLeftDrawer () {
         leftDrawer.value.toggleLeftDrawer()
       },

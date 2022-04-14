@@ -14,10 +14,12 @@ export const useRecipeStore = defineStore('recipes', {
     userIsAdmin: false,
     isLoggingIn: false,
     modals: {
-      login: false
+      login: false,
+      recipe: false
     },
     errors: {
-      login: ''
+      login: '',
+      recipe: ''
     },
     selected: {
       category: ''

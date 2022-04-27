@@ -29,6 +29,10 @@ export interface Category {
   subs: [string];
 }
 
+export interface ModalTypes {
+  [key: string]: boolean;
+}
+
 // export interface FlatRecipe {
 //   key: number;
 //   tit: string;

@@ -1,7 +1,10 @@
 <template>
   <q-page class="row">
     <q-toolbar class="bg-white text-primary">
-      <q-toolbar-title>Ingredients</q-toolbar-title>
+      <q-toolbar-title>
+        Ingredients
+        <span class="float-right size" v-if="currentRecipe.size">Per {{ currentRecipe.size.toLowerCase() }}</span>
+      </q-toolbar-title>
       <p class="caption">Prem un ingredient per marcar-lo com a fet.</p>
     </q-toolbar>
     <div class="flex justify-center q-col-gutter-xs">
@@ -123,11 +126,11 @@ export default defineComponent({
     box-shadow: 0 1px 5px rgb(0 0 0 / 20%), 0 2px 2px rgb(0 0 0 / 14%), 0 3px 1px -2px rgb(0 0 0 / 12%);
   }
   .q-card.done {
-    height: 40px;
+    height: 39px;
     transition: all .3s ease-in;
   }
   .q-item.done {
-    max-height: 40px;
+    max-height: 39px;
     overflow: hidden;
   }
   .q-card.done,

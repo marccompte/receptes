@@ -50,6 +50,7 @@
 import { computed, defineComponent, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useRecipeStore } from '../stores/recipes'
+import { ModalTypes } from '../stores/models'
 import LeftDrawer from 'components/LeftDrawer.vue'
 import BaseModal from 'components/BaseModal.vue'
 import LoginForm from 'components/LoginForm.vue'
@@ -72,8 +73,14 @@ export default defineComponent({
     const loginFormVisible = computed(() => $store.modals.login)
     const recipeFormVisible = computed(() => $store.modals.recipe)
 
-    const showModal = (name) => { $store.modals[name] = true }
-    const hideModal = (name) => { $store.modals[name] = false }
+    const showModal = (name: string) => {
+      const modals:ModalTypes = $store.modals
+      modals[name] = true
+    }
+    const hideModal = (name: string) => {
+      const modals:ModalTypes = $store.modals
+      modals[name] = false
+    }
 
     return {
       hideModal,

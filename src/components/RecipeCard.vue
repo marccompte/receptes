@@ -13,6 +13,7 @@
     </q-card-section>
 
     <q-card-section class="abstract">
+      <span v-if="recipe.size">Per {{ recipe.size.toLowerCase() }}</span>
       <h6>Pas 1/{{ recipe.stp.length }}</h6>
       {{ recipe.stp[0].description }}
     </q-card-section>
